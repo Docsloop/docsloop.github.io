@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="DocsLoop File Preview Extension - Preview documents directly in your browser without downloading"
+    />
+    <title>DocsLoop File Preview Extension | Seamless Document Viewing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-light: #60a5fa;
+        --secondary-color: #0ea5e9;
+        --accent-color: #f97316;
+        --success-color: #10b981;
+        --text-color: #1e293b;
+        --text-light: #64748b;
+        --light-bg: #f8fafc;
+        --card-bg: #ffffff;
+        --border-color: #e2e8f0;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--light-bg);
+        color: var(--text-color);
+        line-height: 1.6;
+        padding: 0;
+        margin: 0;
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 3rem 0 4rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSgzMCkiPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSI+PC9yZWN0PjwvcGF0dGVybj48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSI+PC9yZWN0Pjwvc3ZnPg==");
+        opacity: 0.3;
+        z-index: 0;
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+        background-color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        box-shadow: var(--shadow);
+      }
+
+      .logo-text {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: -2rem auto 0;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .intro-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        box-shadow: var(--shadow-lg);
+        text-align: center;
+      }
+
+      .intro-card p {
+        max-width: 700px;
+        margin: 0 auto 1.5rem;
+        color: var(--text-light);
+        font-size: 1.1rem;
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        margin-top: 0.5rem;
+      }
+
+      .cta-button:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .secondary-button {
+        display: inline-block;
+        background-color: white;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        margin-left: 1rem;
+      }
+
+      .secondary-button:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+        transform: translateY(-2px);
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        color: white;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+      }
+
+      .test-section {
+        background-color: var(--card-bg);
+        margin-bottom: 2rem;
+        padding: 1.75rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s ease-in-out,
+          box-shadow 0.2s ease-in-out;
+      }
+
+      .test-section:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .file-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+      }
+
+      .file-link {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background-color: var(--light-bg);
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+
+      .file-link:hover {
+        background-color: rgba(37, 99, 235, 0.1);
+        transform: translateY(-3px);
+      }
+
+      .file-icon {
+        width: 45px;
+        height: 45px;
+        background-color: var(--primary-color);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .file-details {
+        flex: 1;
+      }
+
+      .file-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      .file-desc {
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+
+      .csv-icon {
+        background-color: var(--primary-color);
+      }
+      .xlsx-icon {
+        background-color: #107c41;
+      }
+      .docx-icon {
+        background-color: var(--secondary-color);
+      }
+      .pdf-icon {
+        background-color: #f40f02;
+      }
+      .md-icon {
+        background-color: var(--accent-color);
+      }
+      .txt-icon {
+        background-color: var(--text-light);
+      }
+
+      .features-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      .feature-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(37, 99, 235, 0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .feature-icon svg {
+        color: var(--primary-color);
+      }
+
+      footer {
+        background-color: var(--primary-dark);
+        color: white;
+        padding: 3rem 0 2rem;
+        margin-top: 4rem;
+      }
+
+      .footer-content {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+      }
+
+      .footer-logo {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .footer-logo svg {
+        margin-right: 10px;
+      }
+
+      .footer-text {
+        font-size: 0.95rem;
+        opacity: 0.8;
+        margin-bottom: 1.5rem;
+      }
+
+      .footer-links h3 {
+        color: white;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .footer-links ul {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 0.75rem;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .footer-links a:hover {
+        color: white;
+        text-decoration: underline;
+      }
+
+      .copyright {
+        max-width: 1100px;
+        margin: 2rem auto 0;
+        padding: 1.5rem 2rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+        font-size: 0.9rem;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1.5rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .file-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .features-section {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+        }
+
+        .cta-button,
+        .secondary-button {
+          display: block;
+          margin: 1rem 0;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="logo-container">
+          <div class="logo">
+            <img
+              src="https://docsloop.com/dlp.svg"
+              alt="DocsLoop Logo"
+              width="35"
+              height="35"
+              style="max-width: 100%; height: auto"
+            />
+          </div>
+          <div class="logo-text">DocsLoop</div>
+        </div>
+        <h1>File Preview Extension</h1>
+        <p class="subtitle">Preview documents directly in your browser without downloading</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="intro-card">
+        <h2 style="border-bottom: none; text-align: center; margin-bottom: 1rem">
+          Seamless Document Viewing Experience
+        </h2>
+        <p>
+          DocsLoop File Preview Extension allows you to preview various document formats directly in
+          your browser without downloading them. Simply click on any document link with the DocsLoop
+          attribute to see it in action.
+        </p>
+        <a href="https://docsloop.com/free-tools" class="cta-button" rel="dofollow"
+          >Explore Free Tools</a
+        >
+        <a href="https://docsloop.com" class="secondary-button" rel="dofollow">Visit DocsLoop</a>
+      </div>
+
+      <div class="features-section">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+          </div>
+          <h3>Multiple File Formats</h3>
+          <p>
+            Preview CSV, XLSX, DOCX, PDF, Markdown, and TXT files directly in your browser without
+            downloading.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3>Just Download For Free</h3>
+          <p>
+            Download the DocsLoop file preview extension for free and start previewing documents
+            instantly without leaving your browser.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <h3>Client-Side Processing</h3>
+          <p>
+            All document processing happens in the browser, ensuring your data remains private and
+            secure.
+          </p>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>Spreadsheet Files</h2>
+        <div class="file-grid">
+          <a
+            href="https://support.staffbase.com/hc/en-us/article_attachments/360009197031/username.csv"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon csv-icon">CSV</div>
+            <div class="file-details">
+              <div class="file-name">Sample CSV File</div>
+              <div class="file-desc">Basic comma-separated values file</div>
+            </div>
+          </a>
+
+          <a
+            href="https://file-examples.com/storage/fe5f2a7a9a65cf914d1a0fb/2017/02/file_example_XLSX_10.xlsx"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon xlsx-icon">XLSX</div>
+            <div class="file-details">
+              <div class="file-name">Sample Excel File</div>
+              <div class="file-desc">Excel spreadsheet with multiple sheets</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>Document Files</h2>
+        <div class="file-grid">
+          <a
+            href="https://file-examples.com/storage/fe5f2a7a9a65cf914d1a0fb/2017/02/file-sample_100kB.docx"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon docx-icon">DOCX</div>
+            <div class="file-details">
+              <div class="file-name">Sample DOCX File</div>
+              <div class="file-desc">Microsoft Word document</div>
+            </div>
+          </a>
+
+          <a
+            href="https://file-examples.com/storage/fe5f2a7a9a65cf914d1a0fb/2017/10/file-sample_150kB.pdf"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon pdf-icon">PDF</div>
+            <div class="file-details">
+              <div class="file-name">Sample PDF File</div>
+              <div class="file-desc">Portable Document Format file</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2>Text Files</h2>
+        <div class="file-grid">
+          <a
+            href="https://gist.githubusercontent.com/cbmgit/4a35815c1ad8f9efdf5365a4a659f48d/raw/markdownsample.md"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon md-icon">MD</div>
+            <div class="file-details">
+              <div class="file-name">Sample Markdown File</div>
+              <div class="file-desc">Markdown formatted text file</div>
+            </div>
+          </a>
+
+          <a
+            href="https://file-examples.com/storage/fe5f2a7a9a65cf914d1a0fb/2017/02/file_example_TXT_10.txt"
+            class="file-link docsloop-preview"
+            data-docsloop-preview="true"
+          >
+            <div class="file-icon txt-icon">TXT</div>
+            <div class="file-details">
+              <div class="file-name">Sample Text File</div>
+              <div class="file-desc">Plain text file</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div>
+          <div class="footer-logo">
+            <img
+              src="https://docsloop.com/dlp.svg"
+              alt="DocsLoop Logo"
+              width="24"
+              height="24"
+              style="margin-right: 10px; max-width: 100%; height: auto"
+            />
+            DocsLoop
+          </div>
+          <p class="footer-text">
+            DocsLoop provides seamless document viewing and management solutions for businesses and
+            individuals.
+          </p>
+          <a href="https://docsloop.com" class="cta-button" rel="dofollow">Visit DocsLoop.com</a>
+        </div>
+
+        <div class="footer-links">
+          <h3>Free Tools</h3>
+          <ul>
+            <li>
+              <a href="https://docsloop.com/free-tools/csv-viewer" rel="dofollow">CSV Viewer</a>
+            </li>
+            <li>
+              <a href="https://docsloop.com/free-tools/docx-viewer" rel="dofollow">DOCX Viewer</a>
+            </li>
+            <li>
+              <a href="https://docsloop.com/free-tools/pdf-viewer" rel="dofollow">PDF Viewer</a>
+            </li>
+            <li>
+              <a href="https://docsloop.com/free-tools/markdown-viewer" rel="dofollow"
+                >Markdown Viewer</a
+              >
+            </li>
+            <li><a href="https://docsloop.com/free-tools" rel="dofollow">View All Tools</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="https://docsloop.com/blog" rel="dofollow">Blog</a></li>
+            <li><a href="https://docsloop.com/documentation" rel="dofollow">Documentation</a></li>
+            <li><a href="https://docsloop.com/contact" rel="dofollow">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="copyright">
+        &copy; 2025 DocsLoop. All rights reserved.
+        <a
+          href="https://docsloop.com/privacy"
+          style="color: rgba(255, 255, 255, 0.7)"
+          rel="dofollow"
+          >Privacy Policy</a
+        >
+        |
+        <a href="https://docsloop.com/terms" style="color: rgba(255, 255, 255, 0.7)" rel="dofollow"
+          >Terms of Service</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>
